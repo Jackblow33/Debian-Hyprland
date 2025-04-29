@@ -29,16 +29,7 @@ fi
 
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_nvidia.log"
-MLOG="install-$(date +%d-%H%M%S)_nvidia2.log"
-
-## adding the deb source for nvidia driver
-# Create a backup of the sources.list file
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup 2>&1 | tee -a "$LOG"
-
-## UBUNTU - NVIDIA (comment this two by adding # you dont need this!)
-# Add the comment and repository entry to sources.list
-echo "## for nvidia" | sudo tee -a /etc/apt/sources.list 2>&1 | tee -a "$LOG"
-echo "deb http://deb.debian.org/debian/ trixie main contrib non-free non-free-firmware" | sudo tee -a /etc/apt/sources.list 2>&1 | tee -a "$LOG"
+MLOG="install-$(date +%d-%H%M%S)_nvidia2.log
 
 # Update the package list
 sudo apt update
@@ -78,7 +69,7 @@ printf "${YELLOW} adding ${SKY_BLUE}nvidia-stuff${RESET} to /etc/default/grub...
   fi
 
   # Update GRUB configuration
-  sudo update-grub 2>&1 | tee -a "$LOG"
+  sudo update-grub
     
   # Define the configuration file and the line to add
     config_file="/etc/modprobe.d/nvidia.conf"
@@ -90,7 +81,7 @@ printf "${YELLOW} adding ${SKY_BLUE}nvidia-stuff${RESET} to /etc/default/grub...
     # Check if the config file exists
     if [ ! -e "$config_file" ]; then
         echo "Creating $config_file"
-        sudo touch "$config_file" 2>&1 | tee -a "$LOG"
+        sudo touch "$config_file"
     fi
 
     add_to_file "$config_file" "$line_to_add"
@@ -100,10 +91,10 @@ printf "${YELLOW} adding ${SKY_BLUE}nvidia-stuff${RESET} to /etc/default/grub...
    modules_file="/etc/initramfs-tools/modules"
 
    if [ -e "$modules_file" ]; then
-    add_to_file "$modules_file" "$modules_to_add" 2>&1 | tee -a "$LOG"
-    sudo update-initramfs -u 2>&1 | tee -a "$LOG"
+    add_to_file "$modules_file" "$modules_to_add"
+    sudo update-initramfs -u
    else
-    echo "Modules file ($modules_file) not found." 2>&1 | tee -a "$LOG"
+    echo "Modules file ($modules_file) not found."
    fi
 
 printf "\n%.0s" {1..2}
