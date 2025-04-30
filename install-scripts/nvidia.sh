@@ -155,8 +155,8 @@ switch_to_regular_user() {
 
 
 # Main script execution
-switch_to_root   # It is a requirement for installing the nvidia proprietary driver
-timer_start
+switch_to_root
+#timer_start
 install_dependencies
 download_nvidia_driver
 install_nvidia_driver
@@ -165,7 +165,7 @@ fix_gnome_for_nvidia
 fix_nvidia_power_management
 enable_nvidia_services
 # update_initramfs
-timer_stop
+#timer_stop
 switch_to_regular_user
 
 
