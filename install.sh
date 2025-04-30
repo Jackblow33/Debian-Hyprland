@@ -185,11 +185,11 @@ options_command=(
 )
 
 # Add NVIDIA options if detected
-if [ "$nvidia_detected" == "true" ]; then
-    options_command+=(
-        "nvidia" "Do you want script to configure NVIDIA GPU?" "OFF"
-    )
-fi
+#if [ "$nvidia_detected" == "true" ]; then
+#    options_command+=(
+#        "nvidia" "Do you want script to configure NVIDIA GPU?" "OFF"
+#   )
+#fi
 
 # Check if user is already in the 'input' group
 input_group_detected=false
