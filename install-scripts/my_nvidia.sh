@@ -6,7 +6,7 @@
 
 # nvidia.sh - Script to install NVIDIA drivers on Debian 12 - Trixie & Sid. Untested on Stable but might work.
 # Linux kernel 6.11 and beyond required
-
+sudo su
 clear
 echo -e "\n\n\n\n\n\n\n\n\n\n"
 echo -e '\033[1;31mTo blacklist nouveau driver the file etc/modprobe.d/blacklist-nouveau.conf gonna be created.\033[0m'
