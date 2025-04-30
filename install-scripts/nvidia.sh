@@ -6,7 +6,18 @@
 
 # nvidia.sh - Script to install NVIDIA drivers on Debian 12 - Trixie & Sid. Untested on Stable but might work.
 # Linux kernel 6.11 and beyond required
-sudo su
+
+
+switch_to_root() {
+    if [ "$EUID" -ne 0 ]; then
+        sudo "$0" "$@"
+    else
+        # Nvidia driver installation have to be executed as root user
+        echo "You are now running as the root user."
+    fi
+}
+
+
 clear
 echo -e "\n\n\n\n\n\n\n\n\n\n"
 echo -e '\033[1;31mTo blacklist nouveau driver the file etc/modprobe.d/blacklist-nouveau.conf gonna be created.\033[0m'
@@ -129,7 +140,22 @@ update_initramfs() {
     update-initramfs -u || handle_error
 }
 
+
+switch_to_regular_user() {
+    if [ "$EUID" -eq 0 ]; then
+        read -p "Enter the username of the regular user: " regular_user
+
+        # Switch to the regular user
+        su - "$regular_user"
+    else
+        echo "Already a regular user."
+    fi
+}
+
+
+
 # Main script execution
+switch_to_root   # It is a requirement for installing the nvidia proprietary driver
 timer_start
 install_dependencies
 download_nvidia_driver
@@ -140,7 +166,8 @@ fix_nvidia_power_management
 enable_nvidia_services
 # update_initramfs
 timer_stop
-exit
+switch_to_regular_user
+
 
 # Clear the screen and notify the user
 #clear
@@ -150,7 +177,7 @@ exit
 # Uncomment to reboot automaticaly at the end of the installation
 # shutdown -r now
 
-# Optional checks
+# Usefull checks
 # sudo cat /sys/module/nvidia_drm/parameters/modeset
 # sudo cat /proc/driver/nvidia/params | grep "PreserveVideoMemoryAllocations"
 # lsmod | grep nouveau || echo 'Nouveau NVIDIA driver have been blacklisted'
